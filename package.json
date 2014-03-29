@@ -1,0 +1,15 @@
+{
+  "name": "PinnCode",
+  "version": "0.0.1",
+  "description": "Pinnacle sports service",
+  "main": "server.js",
+  "repository": "",
+  "author": "Iurii Razubaiev <yr.fine@gmail.com>",
+  "dependencies": {
+    "express": "~3.2.4",
+    "nodemailer": "~0.6.1",
+    "request": "~2.34.0",
+    "node-persist": "0.0.2",
+    "ejs": "~1.0.0"
+  }
+}

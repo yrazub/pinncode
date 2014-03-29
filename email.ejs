@@ -1,0 +1,10 @@
+<h1>Pinnacle Tennis Tournaments</h1><br>
+  <ul>
+    <% for (var tournament in tournaments) { %>
+        <% if (tournaments.hasOwnProperty(tournament)) { %>
+          <li><%= tournament %></li>
+        <% } %>
+    <% } %>
+  </ul>
+<br>
+generated at <%= date %>

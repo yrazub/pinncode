@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en" ng-app>
+  <head>
+    <title>PinnCode</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        .firstWord {
+            color: orange;
+        }
+        h2 {
+            display: inline-block;
+        }
+        .fetchStateBlock * {
+            font-size: 16px;
+        }
+        .statusStarted {
+            color: green;
+            font-weight: bold;
+        }
+        input[type="range"] {
+            vertical-align: middle;
+        }
+        .settingsBlock {
+            border: 1px solid grey; 
+            display: table;
+            padding: 20px;
+            margin: 20px 0;
+        }
+    </style>
+    
+    <script  type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+
+  </head>
+  <body>
+    <h1><span class="firstWord">Pinn</span>Code</h1>
+    
+    <form method="get" action="/send">
+        <input type="text" name="email" value="pinncode1@gmail.com">
+        <input type="submit" name="send">
+    </form>
+    
+    <div class="fetchStateBlock settingsBlock">
+        <h2>Status:</h2> <span class="statusStarted">started</span>
+        <br>
+        <button name="start" value="start" id="btnStart">start</button>
+        <button name="stop" value="stop" id="btnStop">stop</button>
+        <button name="check" value="check" id="btnCheck">check</button>
+    </div>
+    
+    
+    <div class="settingsBlock">
+        Interval: 30 <input type="range" name="interval" min="30" max="600" step="30" value="30"> 600
+    </div>
+    
+    <script>
+        $("#btnStart").click(function(){
+            $.get("/start");
+        });
+
+        $("#btnStop").click(function(){
+            $.get("/stop");
+        });
+    </script>
+    
+  </body>
+</html>

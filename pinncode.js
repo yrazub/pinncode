@@ -13,9 +13,10 @@ var request = require("request").defaults({jar: true}),
     callbacks = [],
     consts = {
         baseUrl: "http://www.pinnaclesports.com/",
-        interval: 100000
-    }, intervalId;
-    
+        interval: 15000
+    },
+    intervalId;
+
 storage.initSync({
     // dir:'./data',
     // stringify: JSON.stringify,
@@ -50,9 +51,9 @@ function subscribeOnTournaments(callback){
 }
 
 function notifyOnTournaments(tournaments){
-    for (var i=0; i<callbacks.lenght; i++) {
+    for (var i=0; i<callbacks.length; i++) {
         try {
-            callback(tournaments);
+            callbacks[i](tournaments);
         } catch (e) {
             console.error(e)
         }
@@ -61,33 +62,36 @@ function notifyOnTournaments(tournaments){
 
 function compareObj(a, b) {
     console.log("========compare");
+    var difference = {}, key;
     
-    if (Object.keys(a).length != Object.keys(b).length) {
-        
-        console.log("========key count differs");
-        return false;
-    }
-    
-    for (var key in a) {
+    for (key in a) {
         if (!a.hasOwnProperty(key)) {
             continue;
         }
         
         if (!b[key]) {
-            console.log("========no key " + key);
-            return false;
-        }
-        
-        if (b[key] !== a[key]) {
-            console.log("======== key value differs: " + key + ", value=" + b[key]);
-            return false;
+            console.log("======== key missing: " + key);
+            
+            difference[key] = false;
         }
     }
     
-    console.log("======== objects identical");
+    for (key in b) {
+        if (!b.hasOwnProperty(key)) {
+            continue;
+        }
+        
+        if (!a[key]) {
+            console.log("======== key added: " + key);
+            
+            difference[key] = true;
+        }
+    }
+    
+    console.log("diff:" + JSON.stringify(difference));
     
     
-    return true;
+    return difference;
 }
 
 function fetchTournaments(){
@@ -105,7 +109,7 @@ function fetchTournaments(){
         //parsing block tournaments
         // var r = /<div class="clr".*?>Tennis<\/div>[\s\S]*?<a .*?>([\s\S]*?)<\/a>[\s\S]*?<div class="clr"/gmi
         var r = /<div class="clr".*?>Tennis<\/div>([\s\S]*?)<div class="clr"/gmi
-        var block, groups, groups1;
+        var block, groups, groups1, key;
         
         groups = r.exec(body);
         if (groups && groups[1]) {
@@ -113,19 +117,28 @@ function fetchTournaments(){
             var newTournaments = {};
             
             while (groups1 = r1.exec(groups[1])) {
-                newTournaments[groups1[1]] = 1;
+                newTournaments[groups1[1]] = {status: 0};
             }
             
-            console.log("new tournaments:" +  JSON.stringify(newTournaments));
-            
-            if (!compareObj(tournaments, newTournaments)) {
-                console.log("newTournaments differs, notifying listeners");
-                notifyOnTournaments(newTournaments);
-            }
+            var diff = compareObj(tournaments, newTournaments);
             
             tournaments = newTournaments;
             storage.setItem("tournaments", newTournaments);
-            //storage.persist();
+            storage.persist();
+            
+            if (Object.keys(diff).length > 0) {
+                console.log("newTournaments differs, notifying listeners");
+                for (key in diff) {
+                    if (diff.hasOwnProperty(key) && diff[key]) {
+                        tournaments[key].status = 1;    
+                    }
+                }
+                
+                console.log("notifying new tournaments:" +  JSON.stringify(tournaments));
+                
+                notifyOnTournaments(tournaments);
+            }
+            
         }
 
     });

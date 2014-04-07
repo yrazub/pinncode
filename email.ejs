@@ -1,10 +1,11 @@
 <h1>Pinnacle Tennis Tournaments</h1><br>
-  <ul>
+  <ul class="test">
     <% for (var tournament in tournaments) { %>
         <% if (tournaments.hasOwnProperty(tournament)) { %>
-          <li><%= tournament %></li>
+            <% var status = tournaments[tournament].status == 1 ? 'new!':'' %>
+            <li style="padding:3px"><%= tournament %> <span style="color: white;border-radius: 2px;background:green;padding:1px 2px;"><%= status %></span></li>
         <% } %>
     <% } %>
   </ul>
 <br>
-generated at <%= date %>
+<p>generated at <%= date %></p>

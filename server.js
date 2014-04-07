@@ -3,6 +3,7 @@ var path = require('path');
 var express = require('express');
 var url = require('url');
 var nodemailer = require("nodemailer");
+var storage = require('node-persist');
 var transport = nodemailer.createTransport("SMTP", {
     service: "Gmail",
     auth: {
@@ -21,6 +22,35 @@ app.use(express.static(path.resolve(__dirname, 'client')));
 
 app.get('/send', function(req, res){
     var email = url.parse(req.url, true).query.email;
+    sendEmail(email);
+    storage.setItem("email", email)
+    
+    res.redirect("/");
+});
+
+app.get('/start', function(req, res){
+    pinncode.start();
+    res.send(200);
+});
+
+app.get('/stop', function(req, res){
+    pinncode.stop();
+    res.send(200);
+});
+
+var server = http.createServer(app);
+server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){
+  var addr = server.address();
+  console.log("Created server at ", addr.address + ":" + addr.port);
+});
+
+pinncode.subscribe(function(){
+    console.log("==========callback===========");
+    var email = storage.getItem("email") || "pinncode1@gmail.com";
+    sendEmail(email);
+});
+
+function sendEmail(email){
     var mailOptions = {
         from: "PinnCode <pinncode1@gmail.com>", // sender address
         to: "yr.fine@gmail.com", // list of receivers
@@ -46,25 +76,7 @@ app.get('/send', function(req, res){
     } else {
         console.log("email not specified");
     }
-    
-    res.redirect("/");
-});
-
-app.get('/start', function(req, res){
-    pinncode.start();
-    res.send(200);
-});
-
-app.get('/stop', function(req, res){
-    pinncode.stop();
-    res.send(200);
-});
-
-var server = http.createServer(app);
-server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){
-  var addr = server.address();
-  console.log("Created server at ", addr.address + ":" + addr.port);
-});
+}
 
 //var browser = require("zombie");
 //var request = require('request').defaults({jar: true});

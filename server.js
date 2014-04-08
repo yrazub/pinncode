@@ -38,11 +38,19 @@ app.get('/stop', function(req, res){
     res.send(200);
 });
 
+var server_port = process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000;
+var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || process.env.IP || "0.0.0.0";
+
+console.log("...Trying to start server at ", server_ip_address + ":" + server_port);
+
 var server = http.createServer(app);
-server.listen(process.env.PORT || 3000, process.env.IP || "0.0.0.0", function(){
-  var addr = server.address();
-  console.log("Created server at ", addr.address + ":" + addr.port);
-});
+server.listen(
+    server_port,
+    server_ip_address, function(){
+        var addr = server.address();
+        console.log("Created server at ", addr.address + ":" + addr.port);
+    }
+);
 
 pinncode.subscribe(function(){
     console.log("==========callback===========");

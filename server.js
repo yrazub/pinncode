@@ -18,6 +18,7 @@ var ejs = require('ejs'),
 
 var app = express();
 
+app.use(express.basicAuth("pinncode", "p1NNcode1"));
 app.use(express.static(path.resolve(__dirname, 'client')));
 
 app.get('/send', function(req, res){

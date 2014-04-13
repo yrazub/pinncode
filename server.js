@@ -18,8 +18,11 @@ var ejs = require('ejs'),
 
 var app = express();
 
-app.use(express.basicAuth("pinncode", "p1NNcode1"));
-app.use(express.static(path.resolve(__dirname, 'client')));
+app.get('/', function(req, res){
+    console.log("default route call");
+    var config = pinncode.getConfig();
+    res.render("client/index.html", config);
+});
 
 app.get('/send', function(req, res){
     var email = url.parse(req.url, true).query.email;
@@ -38,6 +41,11 @@ app.get('/stop', function(req, res){
     pinncode.stop();
     res.send(200);
 });
+
+app.use(express.basicAuth("pinncode", "p1NNcode1"));
+app.use(express.static(path.resolve(__dirname, 'client')));
+app.engine('.html', ejs.__express);
+app.set('views', __dirname);
 
 var server_port = process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000;
 var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || process.env.IP || "0.0.0.0";

@@ -4,10 +4,10 @@
         <% if (tournaments.hasOwnProperty(tournament)) { %>
             <li style="padding:3px"><%= tournament %>
             <% if (tournaments[tournament].status == 1) { %>
-                <span style="color: white;border-radius: 2px;background:green;padding:1px 2px;">new!</span>
+                <span style="color: white;border-radius: 2px;background:green;padding:1px 2px;">new</span>
             <% } %>
             <% if (tournaments[tournament].hndcp) { %>
-                <span style="color: white;border-radius: 2px;background:red;padding:1px 2px;">handicap!</span>
+                <span style="color: white;border-radius: 2px;background:red;padding:1px 2px;">handicap</span>
             <% } %>
             </li>
         <% } %>

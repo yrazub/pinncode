@@ -15,7 +15,8 @@ var request = require("request").defaults({jar: true}),
     callbacks = [],
     consts = {
         baseUrl: "http://www.pinnaclesports.com",
-        interval: 600000
+        interval: 600000,
+        ignoreRemovedTournaments: true
     },
     intervalId;
 
@@ -62,19 +63,21 @@ function notifyOnTournaments(tournaments){
     }
 }
 
-function compareObj(a, b) {
+function compareObj(a, b, ignoreMissingKeys) {
     console.log("========compare");
     var difference = {}, key;
     
-    for (key in a) {
-        if (!a.hasOwnProperty(key)) {
-            continue;
-        }
-        
-        if (!b[key]) {
-            console.log("======== key missing: " + key);
+    if (!ignoreMissingKeys) {
+        for (key in a) {
+            if (!a.hasOwnProperty(key)) {
+                continue;
+            }
             
-            difference[key] = {status: 0};
+            if (!b[key]) {
+                console.log("======== key missing: " + key);
+                
+                difference[key] = {status: 0};
+            }
         }
     }
     
@@ -153,7 +156,7 @@ function fetchTournaments(){
         console.log("all done");
         console.log("new tournaments:" +  JSON.stringify(newTournaments));
         
-        var diff = compareObj(tournaments, newTournaments);
+        var diff = compareObj(tournaments, newTournaments, consts.ignoreRemovedTournaments);
         
         tournaments = newTournaments;
         storage.setItem("tournaments", newTournaments);

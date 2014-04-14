@@ -5,7 +5,7 @@ module.exports = {
     stop: stop,
     subscribe: subscribeOnTournaments,
     isStarted: isStarted,
-    getConfig: getConfig
+    getModel: getModel
 };
 
 var request = require("request").defaults({jar: true}),
@@ -15,7 +15,7 @@ var request = require("request").defaults({jar: true}),
     callbacks = [],
     consts = {
         baseUrl: "http://www.pinnaclesports.com",
-        interval: 60000
+        interval: 600000
     },
     intervalId;
 
@@ -74,7 +74,7 @@ function compareObj(a, b) {
         if (!b[key]) {
             console.log("======== key missing: " + key);
             
-            difference[key] = false;
+            difference[key] = {status: 0};
         }
     }
     
@@ -86,7 +86,13 @@ function compareObj(a, b) {
         if (!a[key]) {
             console.log("======== key added: " + key);
             
-            difference[key] = true;
+            difference[key] = {status: 1};
+        }
+        
+        if (b[key].hndcp && a[key] && !a[key].hndcp) {
+            console.log("======== hndcp added: " + key);
+            
+            difference[key] = {hndcp: true};
         }
     }
     
@@ -117,25 +123,29 @@ function fetchTournaments(){
         return tournaments;
     }
     
-    function getInfoForTournament(t){
+    function getInfoForTournament(t, timeout){
+        console.log("Creating promise for " + t.url);
         return new Promise(function(resolve, reject){
             var url = consts.baseUrl + t.url,
                 r2 = /class="linesSpread">[\+\-]\d.*?\d+</gmi;
+            timeout = timeout || 100;
             
-            console.log("sending request to " + url);
-            
-            request.get(url, function(error, response, body){
-                console.log(response.statusCode);
-                if (error || response.statusCode != 200) {
-                    console.log("error");
-                    reject(error);
-                } else {
-                    var hndcp = r2.exec(body);
-                    t.hndcp = !!hndcp;
-                    resolve("done");
-                }
+            setTimeout(function(){
+                console.log("Sending request to " + t.url);
                 
-            });
+                request.get(url, function(error, response, body){
+                    console.log(response.statusCode + " for " + t.url);
+                    if (error || response.statusCode != 200) {
+                        console.log("error");
+                        reject(error);
+                    } else {
+                        var hndcp = r2.exec(body);
+                        t.hndcp = !!hndcp;
+                        resolve("done");
+                    }
+                    
+                });
+            }, timeout);
         });    
     }
     
@@ -153,7 +163,9 @@ function fetchTournaments(){
             console.log("newTournaments differs, notifying listeners");
             for (var key in diff) {
                 if (diff.hasOwnProperty(key) && diff[key]) {
-                    tournaments[key].status = 1;    
+                    if (diff[key].status) {
+                        tournaments[key].status = diff[key].status;    
+                    }
                 }
             }
             
@@ -175,14 +187,14 @@ function fetchTournaments(){
         //remove if unnecessary    
         file(body);
         
-        var promises = [];
+        var promises = [], timeoutRequest = 0;
         
         var newTournaments = parseTournaments(body);
         
-        if (typeof tournaments != "undefined") {  
+        if (typeof newTournaments != "undefined") {  
             for (var t in newTournaments) {
                 if (newTournaments.hasOwnProperty(t)) {
-                    var promise = getInfoForTournament(newTournaments[t]);
+                    var promise = getInfoForTournament(newTournaments[t], (++timeoutRequest) * 2000);
                     
                     promises.push(promise);
                 }
@@ -218,9 +230,11 @@ function isStarted(){
     return !!(intervalId);
 }
 
-function getConfig(){
-    return {
+function getModel(){
+    return { 
+        baseUrl: consts.baseUrl,
         interval: consts.interval / 1000,
-        isStarted: isStarted()
+        isStarted: isStarted(),
+        tournaments: tournaments
     };
 }

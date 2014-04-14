@@ -20,8 +20,8 @@ var app = express();
 
 app.get('/', function(req, res){
     console.log("default route call");
-    var config = pinncode.getConfig();
-    res.render("client/index.html", config);
+    var model= pinncode.getModel();
+    res.render("client/index.html", model);
 });
 
 app.get('/send', function(req, res){

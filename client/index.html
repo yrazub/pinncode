@@ -28,10 +28,23 @@
             vertical-align: middle;
         }
         .settingsBlock {
+            position: relative;
             border: 1px solid grey; 
             display: table;
             padding: 20px;
             margin: 20px 0;
+        }
+        
+        .settingsBlock .settingsTitle {
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            padding: 0;
+            margin: 0;
+            font-size: 16px;
+            line-height: 20px;
+            background: #fff;
+            font-weight: normal;
         }
     </style>
     
@@ -47,7 +60,7 @@
     </form>
     
     <div class="fetchStateBlock settingsBlock">
-        <h2>Status:</h2>
+        <h2 class="settingsTitle">Status</h2>
         <% if (isStarted) {%>
             <span class="statusStarted">started</span>
         <%} else {%>
@@ -61,7 +74,27 @@
     
     
     <div class="settingsBlock">
-        Interval: 30 <input type="range" name="interval" min="30" max="600" step="30" value="<%= interval %>"> 600
+        <h2 class="settingsTitle">Interval</h2>
+        30 <input type="range" name="interval" min="30" max="600" step="30" value="<%= interval %>"> 600
+    </div>
+    
+    <div class="tournamentsContainer settingsBlock">
+        <h2 class="settingsTitle">Tournaments</h2>
+        <ul>
+            <% for (var tournament in tournaments) { %>
+                <% if (tournaments.hasOwnProperty(tournament)) { %>
+                    <li style="padding:3px">
+                        <a href= "<%= baseUrl %><%= tournaments[tournament].url %>"><%= tournament %></a>
+                        <% if (tournaments[tournament].status == 1) { %>
+                            <span style="color: white;border-radius: 2px;background:green;padding:1px 2px;">new!</span>
+                        <% } %>
+                        <% if (tournaments[tournament].hndcp) { %>
+                            <span style="color: white;border-radius: 2px;background:red;padding:1px 2px;">handicap!</span>
+                        <% } %>
+                    </li>
+                <% } %>
+            <% } %>
+        </ul>
     </div>
     
     <script>

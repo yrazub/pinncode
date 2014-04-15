@@ -5,4 +5,4 @@ logs/*.log
 data/*
 
 # Persistant data
-node_modules/node-persist/persist/persist
+node_modules/node-persist/persist/persist/*

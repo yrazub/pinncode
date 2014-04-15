@@ -12,16 +12,20 @@ var request = require("request").defaults({jar: true}),
     fs = require('fs'),
     storage = require('node-persist'),
     Promise = require('promise'),
+    path = require("path"),
+    mainDir = path.dirname(require.main.filename),
     callbacks = [],
     consts = {
         baseUrl: "http://www.pinnaclesports.com",
-        interval: 600000,
+        interval: 300,
         ignoreRemovedTournaments: true
     },
     intervalId;
+    
+    console.log("maindir = " + mainDir);
 
 storage.initSync({
-    // dir:'./data',
+    dir:mainDir + "/data" ,
     // stringify: JSON.stringify,
     // parse: JSON.parse,
     encoding: 'utf8',
@@ -86,13 +90,13 @@ function compareObj(a, b, ignoreMissingKeys) {
             continue;
         }
         
-        if (!a[key]) {
+        if (!a || !a[key]) {
             console.log("======== key added: " + key);
             
             difference[key] = {status: 1};
         }
         
-        if (b[key].hndcp && a[key] && !a[key].hndcp) {
+        if (b[key].hndcp && a && a[key] && !a[key].hndcp) {
             console.log("======== hndcp added: " + key);
             
             difference[key] = {hndcp: true};
@@ -205,7 +209,11 @@ function fetchTournaments(){
             
             Promise.all(promises).then(function(result){
                 console.log(result);
-                processTournaments(newTournaments);
+                try {
+                    processTournaments(newTournaments);
+                } catch (e) {
+                    console.log(e);
+                }
             }, function(){
                 console.log("rejected");
             });
@@ -220,7 +228,9 @@ function fetchTournaments(){
 function start(){
     console.log("starting...");
     fetchTournaments();
-    intervalId = setInterval(fetchTournaments, consts.interval);
+    var interval = (storage.getItem("interval") || consts.interval) * 1000;
+    console.log("Setting interval " + interval);
+    intervalId = setInterval(fetchTournaments, interval);
 }
 
 function stop(){
@@ -236,8 +246,9 @@ function isStarted(){
 function getModel(){
     return { 
         baseUrl: consts.baseUrl,
-        interval: consts.interval / 1000,
+        interval: Number(storage.getItem("interval") || consts.interval),
         isStarted: isStarted(),
-        tournaments: tournaments
+        tournaments: tournaments,
+        email: storage.getItem("email") || ""
     };
 }

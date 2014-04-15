@@ -54,9 +54,9 @@
   <body>
     <h1><span class="firstWord">Pinn</span>Code</h1>
     
-    <form method="get" action="/send">
-        <input type="text" name="email" value="pinncode1@gmail.com">
-        <input type="submit" name="send">
+    <form method="get" action="/save">
+        <input type="text" name="email" value="<%= email %>">
+        <input type="button" name="save" value="save" onclick="this.form.submit();">
     </form>
     
     <div class="fetchStateBlock settingsBlock">
@@ -75,7 +75,7 @@
     
     <div class="settingsBlock">
         <h2 class="settingsTitle">Interval</h2>
-        30 <input type="range" name="interval" min="30" max="600" step="30" value="<%= interval %>"> 600
+        30 <input type="range" id="inputInterval" name="interval" min="30" max="600" step="30" value="<%= interval %>"> 600
     </div>
     
     <div class="tournamentsContainer settingsBlock">
@@ -104,6 +104,10 @@
 
         $("#btnStop").click(function(){
             $.get("/stop");
+        });
+        
+        $("#inputInterval").click(function(){
+            $.get("/save?interval=" + this.value);
         });
     </script>
     

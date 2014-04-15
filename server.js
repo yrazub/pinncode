@@ -17,6 +17,7 @@ var ejs = require('ejs'),
     emailTemplate = fs.readFileSync(__dirname + '/email.ejs', 'utf8');
 
 var app = express();
+app.use(express.basicAuth("pinncode", "p1NNcode1"));
 
 app.get('/', function(req, res){
     console.log("default route call");
@@ -32,6 +33,20 @@ app.get('/send', function(req, res){
     res.redirect("/");
 });
 
+app.get('/save', function(req, res){
+    function saveValue(name) {
+        var value = url.parse(req.url, true).query[name];
+        if(value) {
+            storage.setItem(name, value);
+        }
+    }
+    
+    saveValue("email");
+    saveValue("interval");
+    
+    res.redirect("/");
+});
+
 app.get('/start', function(req, res){
     pinncode.start();
     res.send(200);
@@ -42,8 +57,10 @@ app.get('/stop', function(req, res){
     res.send(200);
 });
 
-app.use(express.basicAuth("pinncode", "p1NNcode1"));
 app.use(express.static(path.resolve(__dirname, 'client')));
+app.use(express.static(path.resolve(__dirname, 'data')));
+app.use(express.static(path.resolve(__dirname, 'logs')));
+
 app.engine('.html', ejs.__express);
 app.set('views', __dirname);
 

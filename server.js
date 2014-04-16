@@ -74,7 +74,7 @@ server.listen(
     server_port,
     server_ip_address, function(){
         var addr = server.address();
-        console.log("Created server at ", addr.address + ":" + addr.port);
+        console.log("Created server at ", addr.address + ":" + addr.port, ", host:" + require("os").hostname());
     }
 );
 
@@ -94,16 +94,16 @@ function sendEmail(email){
     if (email) {
         console.log("sending email to " + email);
         mailOptions.to = email;
-        mailOptions.html = ejs.render(emailTemplate, {
-            tournaments: pinncode.getTournaments(),
-            date: Date().toString()
-        });
+        var model = pinncode.getModel();
+        model.date = Date().toString();
+        model.host = require("os").hostname();
+        mailOptions.html = ejs.render(emailTemplate, model);
         
         transport.sendMail(mailOptions, function(error, response){
             if(error){
                 console.log(error);
             }else{
-                console.log("Message sent: " + response.message);
+                console.log("Message sent: " + response.message + "\n");
             }
         });
         

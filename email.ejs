@@ -2,16 +2,17 @@
   <ul style="padding: 0">
     <% for (var tournament in tournaments) { %>
         <% if (tournaments.hasOwnProperty(tournament)) { %>
-            <li style="padding:3px"><%= tournament %>
-            <% if (tournaments[tournament].status == 1) { %>
-                <span style="color: white;border-radius: 2px;background:green;padding:1px 2px;">new</span>
-            <% } %>
-            <% if (tournaments[tournament].hndcp) { %>
-                <span style="color: white;border-radius: 2px;background:red;padding:1px 2px;">handicap</span>
-            <% } %>
+            <li style="padding:3px">
+                <a href= "<%= baseUrl %><%= tournaments[tournament].url %>"><%= tournament %></a>
+                <% if (tournaments[tournament].status == 1) { %>
+                    <span style="color: white;border-radius: 2px;background:green;padding:1px 2px;">new</span>
+                <% } %>
+                <% if (tournaments[tournament].hndcp) { %>
+                    <span style="color: white;border-radius: 2px;background:red;padding:1px 2px;">handicap</span>
+                <% } %>
             </li>
         <% } %>
     <% } %>
   </ul>
 <br>
-<p>generated at <%= date %></p>
+<p>generated at <%= date %>, sent from host <%= host %></p>

@@ -22,7 +22,24 @@ var request = require("request").defaults({jar: true}),
     },
     intervalId;
     
-    console.log("maindir = " + mainDir);
+    
+/*=========Patching console.log=========*/
+var util = require('util');
+var log_file = fs.createWriteStream(mainDir + '/logs/console.log', {flags : 'a'});
+//var log_stdout = process.stdout;
+
+console.log = function(_original){
+    log_file.write("\n\n");
+    return function(d) { //
+        try {
+            log_file.write(Date().toString() + "\n" + util.format.apply(null, arguments) + '\n');
+        } catch(e){}
+      
+        _original.apply(console, arguments);
+    };
+}(console.log);
+
+/* ===================================== */
 
 storage.initSync({
     dir:mainDir + "/data" ,
@@ -68,7 +85,6 @@ function notifyOnTournaments(tournaments){
 }
 
 function compareObj(a, b, ignoreMissingKeys) {
-    console.log("========compare");
     var difference = {}, key;
     
     if (!ignoreMissingKeys) {
@@ -103,7 +119,7 @@ function compareObj(a, b, ignoreMissingKeys) {
         }
     }
     
-    console.log("diff:" + JSON.stringify(difference));
+    console.log("difference:", difference);
     
     
     return difference;
@@ -131,7 +147,6 @@ function fetchTournaments(){
     }
     
     function getInfoForTournament(t, timeout){
-        console.log("Creating promise for " + t.url);
         return new Promise(function(resolve, reject){
             var url = consts.baseUrl + t.url,
                 r2 = /class="linesSpread">[\+\-]\d.*?\d+</gmi;
@@ -141,9 +156,8 @@ function fetchTournaments(){
                 console.log("Sending request to " + t.url);
                 
                 request.get(url, function(error, response, body){
-                    console.log(response.statusCode + " for " + t.url);
                     if (error || response.statusCode != 200) {
-                        console.log("error");
+                        console.log("error sending to " + t.url, ", status" + response.statusCode, ", error:" + error);
                         reject(error);
                     } else {
                         var hndcp = r2.exec(body);
@@ -188,11 +202,8 @@ function fetchTournaments(){
         } else if (response.statusCode != 200) {
             console.log("Status code : " + response.statusCode);
         } else {
-            console.log("Request successful");
+            //console.log("Request successful");
         }
-        
-        //remove if unnecessary    
-        file(body);
         
         var promises = [], timeoutRequest = 0;
         
@@ -208,7 +219,6 @@ function fetchTournaments(){
             }
             
             Promise.all(promises).then(function(result){
-                console.log(result);
                 try {
                     processTournaments(newTournaments);
                 } catch (e) {
@@ -226,11 +236,10 @@ function fetchTournaments(){
 }
 
 function start(){
-    console.log("starting...");
-    fetchTournaments();
     var interval = (storage.getItem("interval") || consts.interval) * 1000;
-    console.log("Setting interval " + interval);
+    console.log("Starting with interval " + interval);
     intervalId = setInterval(fetchTournaments, interval);
+    fetchTournaments();
 }
 
 function stop(){

@@ -3,6 +3,7 @@ module.exports = {
     getTournaments: getTournaments,
     start: start,
     stop: stop,
+    restart: restart,
     subscribe: subscribeOnTournaments,
     isStarted: isStarted,
     getModel: getModel
@@ -33,7 +34,7 @@ console.log = function(_original){
     log_file.write("\n\n");
     return function(d) { //
         try {
-            log_file.write(Date().toString() + "\n" + util.format.apply(null, arguments) + '\n');
+            log_file.write(util.format.apply(null, arguments) + '\n');
         } catch(e){}
       
         _original.apply(console, arguments);
@@ -183,9 +184,15 @@ function fetchTournaments(){
         
         var diff = compareObj(tournaments, newTournaments, consts.ignoreRemovedTournaments);
         
-        tournaments = newTournaments;
         storage.setItem("tournaments", newTournaments);
         storage.persist();
+        
+        if (!tournaments) {
+            tournaments = newTournaments;
+            console.log("No previous stored tournaments, ignoring");
+            return;
+        }
+        tournaments = newTournaments;
         
         if (Object.keys(diff).length > 0) {
             console.log("newTournaments differs, notifying listeners");
@@ -202,6 +209,8 @@ function fetchTournaments(){
             notifyOnTournaments(tournaments);
         }
     }
+    
+    console.log(Date().toString() + "\n Fetching tournaments...");
     
     request.get(consts.baseUrl,  function(error, response, body){
         if (error) {
@@ -253,6 +262,13 @@ function stop(){
     console.log("stopping...");
     clearInterval(intervalId);
     intervalId = 0;
+}
+
+function restart(){
+    if (isStarted()) {
+        stop();
+    }
+    start();
 }
 
 function isStarted(){

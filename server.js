@@ -74,15 +74,15 @@ var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || process.env.IP || "0.
 console.log("\n\n");
 console.log("==================================================================");
 console.log("= Starting server at ", server_ip_address + ":" + server_port);
+console.log("==================================================================");
+console.log("\n\n");
 
 var server = http.createServer(app);
 server.listen(
     server_port,
     server_ip_address, function(){
         var addr = server.address();
-        console.log("= Server started server at ", addr.address + ":" + addr.port, ", host:" + require("os").hostname());
-        console.log("==================================================================");
-        console.log("\n\n");
+        console.log("Server started server at ", addr.address + ":" + addr.port, ", host:" + require("os").hostname());
     }
 );
 
@@ -93,7 +93,7 @@ pinncode.subscribe(function(){
     sendEmail(email);
 });
 
-console.log("= Starting pinncode service");
+console.log("Starting pinncode service");
 pinncode.start();
 
 function sendEmail(email){

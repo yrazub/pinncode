@@ -18,7 +18,8 @@ var request = require("request").defaults({jar: true}),
     consts = {
         baseUrl: "http://www.pinnaclesports.com",
         interval: 300,
-        ignoreRemovedTournaments: true
+        ignoreRemovedTournaments: true,
+        defaultEmail: "ivankraynyk@hotmail.com"
     },
     intervalId;
     
@@ -53,6 +54,12 @@ storage.initSync({
 
 var tournaments = storage.getItem("tournaments");
 console.log("Tournaments from storage:" + JSON.stringify(tournaments));
+
+var email = storage.getItem("email");
+console.log("Email from storage:" + email);
+if (!email) {
+    storage.setItem("email", consts.defaultEmail);    
+}
 
 function file(data, fileName){
     if (!fileName) {

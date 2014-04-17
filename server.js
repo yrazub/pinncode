@@ -19,6 +19,8 @@ var ejs = require('ejs'),
 var app = express();
 app.use(express.basicAuth("pinncode", "p1NNcode1"));
 
+/*==========================ROUTES==========================*/
+
 app.get('/', function(req, res){
     console.log("default route call");
     var model= pinncode.getModel();
@@ -64,25 +66,35 @@ app.use(express.static(path.resolve(__dirname, 'logs')));
 app.engine('.html', ejs.__express);
 app.set('views', __dirname);
 
+/*==========================SERVER==========================*/
+
 var server_port = process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000;
 var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || process.env.IP || "0.0.0.0";
 
-console.log("...Trying to start server at ", server_ip_address + ":" + server_port);
+console.log("\n\n");
+console.log("==================================================================");
+console.log("= Starting server at ", server_ip_address + ":" + server_port);
 
 var server = http.createServer(app);
 server.listen(
     server_port,
     server_ip_address, function(){
         var addr = server.address();
-        console.log("Created server at ", addr.address + ":" + addr.port, ", host:" + require("os").hostname());
+        console.log("= Server started server at ", addr.address + ":" + addr.port, ", host:" + require("os").hostname());
+        console.log("==================================================================");
+        console.log("\n\n");
     }
 );
 
+/*==========================PINNCODE==========================*/
+
 pinncode.subscribe(function(){
-    console.log("==========callback===========");
     var email = storage.getItem("email") || "pinncode1@gmail.com";
     sendEmail(email);
 });
+
+console.log("= Starting pinncode service");
+pinncode.start();
 
 function sendEmail(email){
     var mailOptions = {

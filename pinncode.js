@@ -26,6 +26,7 @@ var request = require("request").defaults({jar: true}),
     
     
 /*=========Patching console.log=========*/
+
 var util = require('util');
 var log_file = fs.createWriteStream(mainDir + '/logs/console.log', {flags : 'a'});
 //var log_stdout = process.stdout;
@@ -203,8 +204,6 @@ function fetchTournaments(){
                     }
                 }
             }
-            
-            // console.log("notifying new tournaments:" +  JSON.stringify(tournaments));
             
             notifyOnTournaments(tournaments);
         }

@@ -24,6 +24,9 @@ app.use(express.basicAuth("pinncode", "p1NNcode1"));
 app.get('/', function(req, res){
     console.log("default route call");
     var model= pinncode.getModel();
+    if (typeof lastError != "undefined" && lastError) {
+        model.lastError = lastError;
+    }
     res.render("client/index.html", model);
 });
 
@@ -96,6 +99,15 @@ server.listen(
         console.log("Server started server at ", addr.address + ":" + addr.port, ", host:" + require("os").hostname());
     }
 );
+
+var lastError;
+
+process.on('uncaughtException', function (err) {
+  lastError = (new Date()).toUTCString() + ' uncaughtException: ' + err.message;
+  console.error(lastError);
+  console.error(err.stack);
+//   process.exit(1)
+})
 
 /*==========================PINNCODE==========================*/
 

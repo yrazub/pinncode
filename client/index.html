@@ -53,6 +53,10 @@
         .smallLabel {
             font-size: 10px;
         }
+        .error {
+            color: red;
+        } 
+        
     </style>
     
     <script  type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
@@ -60,6 +64,14 @@
   </head>
   <body>
     <h1><span class="firstWord">Pinn</span>Code</h1>
+    
+    <% if (typeof lastError != "undefined" && lastError) { %>
+        <div class="error settingsBlock">
+            <h2 class="settingsTitle">Error</h2>
+            <%= lastError %>
+                
+        </div>
+    <% } %>
     
     <form method="get" action="/save">
         <input type="text" name="email" value="<%= email %>">

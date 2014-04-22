@@ -232,7 +232,7 @@ function fetchTournaments(){
             for (var t in newTournaments) {
                 if (newTournaments.hasOwnProperty(t)) {
                     
-                    if (tournaments.hasOwnProperty(t)) {
+                    if (tournaments && tournaments.hasOwnProperty(t)) {
                         //copy handicap from previous
                         newTournaments[t].hndcp = tournaments[t].hndcp;
                     }

@@ -40,6 +40,12 @@ app.get('/save', function(req, res){
         var value = url.parse(req.url, true).query[name];
         if(value) {
             storage.setItem(name, value);
+            
+            console.log("Changing value of " + name + " to " + value);
+            
+            if (name == "interval" && pinncode.isStarted()) {
+                pinncode.restart();
+            }
         }
     }
     
@@ -56,6 +62,11 @@ app.get('/start', function(req, res){
 
 app.get('/stop', function(req, res){
     pinncode.stop();
+    res.send(200);
+});
+
+app.get('/check', function(req, res){
+    pinncode.fetch();
     res.send(200);
 });
 
@@ -93,8 +104,11 @@ pinncode.subscribe(function(){
     sendEmail(email);
 });
 
-console.log("Starting pinncode service");
-pinncode.start();
+if (storage.getItem("autostart") !== "false") {
+    console.log("Starting pinncode service");
+    pinncode.start();
+}
+
 
 function sendEmail(email){
     var mailOptions = {

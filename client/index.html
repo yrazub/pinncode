@@ -46,6 +46,13 @@
             background: #fff;
             font-weight: normal;
         }
+        .intervalLabel {
+            display: block;
+            text-align: center;
+        }
+        .smallLabel {
+            font-size: 10px;
+        }
     </style>
     
     <script  type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
@@ -74,8 +81,11 @@
     
     
     <div class="settingsBlock">
-        <h2 class="settingsTitle">Interval</h2>
-        30 <input type="range" id="inputInterval" name="interval" min="30" max="600" step="30" value="<%= interval %>"> 600
+        <h2 class="settingsTitle">Interval (seconds)</h2>
+        <span class="smallLabel">min 30</span>
+        <input type="range" id="inputInterval" name="interval" min="30" max="900" step="30" value="<%= interval %>">
+        <span class="smallLabel">max 900</span>
+        <span class="intervalLabel"> <%= interval %> </span>
     </div>
     
     <div class="tournamentsContainer settingsBlock">
@@ -98,16 +108,24 @@
     </div>
     
     <script>
+        function reloadPage(){
+            document.location.reload();
+        }
+    
         $("#btnStart").click(function(){
-            $.get("/start");
+            $.get("/start", reloadPage);
         });
 
         $("#btnStop").click(function(){
-            $.get("/stop");
+            $.get("/stop", reloadPage);
+        });
+        
+        $("#btnCheck").click(function(){
+            $.get("/check", reloadPage);
         });
         
         $("#inputInterval").change(function(){
-            $.get("/save?interval=" + this.value);
+            $.get("/save?interval=" + this.value, reloadPage);
         });
     </script>
     

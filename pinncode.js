@@ -18,7 +18,7 @@ var request = require("request").defaults({jar: true}),
     callbacks = [],
     consts = {
         baseUrl: "http://www.pinnaclesports.com",
-        interval: 300,
+        defaultInterval: 300,
         ignoreRemovedTournaments: true,
         defaultEmail: "ivankraynyk@hotmail.com"
     },
@@ -139,24 +139,29 @@ function fetchTournaments(){
     function parseTournaments(body){
        var r = /<div class="clr".*?>Tennis<\/div>([\s\S]*?)<div class="clr"/gmi,
             r1 = /<a .*?href="(\/League\/Tennis\/[^\/]+\/\d+\/Lines\.aspx)".*?>\s?([\s\S]*?)\s?<\/a>/gmi;
-        var groups, groups1, tournaments;
+        var groups, groups1, newTournaments;
         
         groups = r.exec(body);
         if (groups && groups[1]) {
-            tournaments = {};
+            newTournaments = {};
             
             while (groups1 = r1.exec(groups[1])) {
                 if (groups1.length == 3) {
-                    tournaments[groups1[2]] = {status: 0, url: groups1[1]};
+                    newTournaments[groups1[2]] = {status: 0, url: groups1[1]};
                 }
             }
         }
         
-        return tournaments;
+        return newTournaments;
     }
     
     function getInfoForTournament(t, timeout){
+        
         return new Promise(function(resolve, reject){
+            if (t.hndcp) {
+                resolve("ignored");
+                return;
+            }
             var url = consts.baseUrl + t.url,
                 r2 = /class="linesSpread">[\+\-]\d.*?\d+</gmi;
             timeout = timeout || 100;
@@ -180,7 +185,6 @@ function fetchTournaments(){
     }
     
     function processTournaments(newTournaments){
-        console.log("all done");
         console.log("new tournaments:" +  JSON.stringify(newTournaments));
         
         var diff = compareObj(tournaments, newTournaments, consts.ignoreRemovedTournaments);
@@ -209,7 +213,7 @@ function fetchTournaments(){
         }
     }
     
-    console.log(Date().toString() + "\n Fetching tournaments...");
+    console.log(Date().toString() + "\nFetching tournaments...");
     
     request.get(consts.baseUrl,  function(error, response, body){
         if (error) {
@@ -227,6 +231,12 @@ function fetchTournaments(){
         if (typeof newTournaments != "undefined") {  
             for (var t in newTournaments) {
                 if (newTournaments.hasOwnProperty(t)) {
+                    
+                    if (tournaments.hasOwnProperty(t)) {
+                        //copy handicap from previous
+                        newTournaments[t].hndcp = tournaments[t].hndcp;
+                    }
+                    
                     var promise = getInfoForTournament(newTournaments[t], (++timeoutRequest) * 2000);
                     
                     promises.push(promise);
@@ -235,6 +245,7 @@ function fetchTournaments(){
             
             Promise.all(promises).then(function(result){
                 try {
+                    console.log("all done ", result);
                     processTournaments(newTournaments);
                 } catch (e) {
                     console.log(e);
@@ -251,7 +262,7 @@ function fetchTournaments(){
 }
 
 function start(){
-    var interval = (storage.getItem("interval") || consts.interval) * 1000;
+    var interval = (storage.getItem("interval") || consts.defaultInterval) * 1000;
     console.log("Starting with interval " + interval);
     intervalId = setInterval(fetchTournaments, interval);
     fetchTournaments();
@@ -277,7 +288,7 @@ function isStarted(){
 function getModel(){
     return { 
         baseUrl: consts.baseUrl,
-        interval: Number(storage.getItem("interval") || consts.interval),
+        interval: Number(storage.getItem("interval") || consts.defaultInterval),
         isStarted: isStarted(),
         tournaments: tournaments,
         email: storage.getItem("email") || ""

@@ -163,7 +163,7 @@ function fetchTournaments(){
                 return;
             }
             var url = consts.baseUrl + t.url,
-                r2 = /class="linesSpread">[\+\-]\d.*?\d+</gmi;
+                r2 = /class="linesSpread">[\+\-]?[\d\.]+[^<]*?[\d\.]+</gmi;
             timeout = timeout || 100;
             
             setTimeout(function(){

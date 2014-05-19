@@ -138,7 +138,8 @@ function fetchTournaments(){
     
     function parseTournaments(body){
        var r = /<div class="clr".*?>Tennis<\/div>([\s\S]*?)<div class="clr"/gmi,
-            r1 = /<a .*?href="(\/League\/Tennis\/[^\/]+\/\d+\/Lines\.aspx)".*?>\s?([\s\S]*?)\s?<\/a>/gmi;
+            r1 = /<a .*?href="(\/League\/Tennis\/[^\/]+\/\d+\/Lines\.aspx)".*?>\s?([\s\S]*?)\s?<\/a>/gmi,
+            r_exclude = /^(?!LIVE|WTA).*/;
         var groups, groups1, newTournaments;
         
         groups = r.exec(body);
@@ -146,7 +147,7 @@ function fetchTournaments(){
             newTournaments = {};
             
             while (groups1 = r1.exec(groups[1])) {
-                if (groups1.length == 3) {
+                if (groups1.length == 3 && r_exclude.test(groups1[2])) {
                     newTournaments[groups1[2]] = {status: 0, url: groups1[1]};
                 }
             }

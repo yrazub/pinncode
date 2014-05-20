@@ -139,7 +139,7 @@ function fetchTournaments(){
     function parseTournaments(body){
        var r = /<div class="clr".*?>Tennis<\/div>([\s\S]*?)<div class="clr"/gmi,
             r1 = /<a .*?href="(\/League\/Tennis\/[^\/]+\/\d+\/Lines\.aspx)".*?>\s?([\s\S]*?)\s?<\/a>/gmi,
-            r_exclude = /^(?!LIVE|WTA).*/;
+            r_exclude = /^(?!LIVE|WTA).*/gmi;
         var groups, groups1, newTournaments;
         
         groups = r.exec(body);

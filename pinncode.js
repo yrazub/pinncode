@@ -147,6 +147,7 @@ function fetchTournaments(){
             newTournaments = {};
             
             while (groups1 = r1.exec(groups[1])) {
+                r_exclude.lastIndex = 0;
                 if (groups1.length == 3 && r_exclude.test(groups1[2])) {
                     newTournaments[groups1[2]] = {status: 0, url: groups1[1]};
                 }

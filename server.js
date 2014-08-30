@@ -8,7 +8,7 @@ var transport = nodemailer.createTransport("SMTP", {
     service: "Gmail",
     auth: {
         user: "pinncode1@gmail.com",
-        pass: "RafaelNadal"
+        pass: "R@faelNadal"
     }
 });
 var pinncode = require("./pinncode");

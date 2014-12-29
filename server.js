@@ -150,6 +150,11 @@ function sendEmail(email){
     }
 }
 
+console.log("testing api...");
+
+var api = require("./pinnapi");
+api.test();
+
 //var browser = require("zombie");
 //var request = require('request').defaults({jar: true});
 

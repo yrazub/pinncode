@@ -1,0 +1,52 @@
+body {
+    font-family: sans-serif;
+}
+.firstWord {
+    color: orange;
+}
+h2 {
+    display: inline-block;
+}
+.fetchStateBlock * {
+    font-size: 16px;
+}
+.statusStarted {
+    color: green;
+    font-weight: bold;
+}
+.statusStopped {
+    color: red;
+    font-weight: bold;
+}
+input[type="range"] {
+    vertical-align: middle;
+}
+.settingsBlock {
+    position: relative;
+    border: 1px solid grey; 
+    display: table;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.settingsBlock .settingsTitle {
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+    line-height: 20px;
+    background: #fff;
+    font-weight: normal;
+}
+.intervalLabel {
+    display: block;
+    text-align: center;
+}
+.smallLabel {
+    font-size: 10px;
+}
+.error {
+    color: red;
+}

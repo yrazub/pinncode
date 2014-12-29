@@ -22,6 +22,7 @@ var request = require("request").defaults({jar: true}),
         ignoreRemovedTournaments: true,
         defaultEmail: "ivankraynyk@hotmail.com"
     },
+    config = require('./config'),
     intervalId;
     
     
@@ -57,10 +58,10 @@ storage.initSync({
 var tournaments = storage.getItem("tournaments");
 console.log("Tournaments from storage:" + JSON.stringify(tournaments));
 
-var email = storage.getItem("email");
+var email = config.get("email");
 console.log("Email from storage:" + email);
 if (!email) {
-    storage.setItem("email", consts.defaultEmail);    
+    config.set("email", consts.defaultEmail);    
 }
 
 function file(data, fileName){

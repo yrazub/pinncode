@@ -1,5 +1,6 @@
 body {
     font-family: sans-serif;
+    margin: 8px;
 }
 .firstWord {
     color: orange;
@@ -49,4 +50,27 @@ input[type="range"] {
 }
 .error {
     color: red;
+}
+
+.borderBox {
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+body > .tracker {
+    width: 400px;
+    float: left;
+}
+
+body > .bets {
+    margin-left: 400px;
+}
+
+.bets .settingsBlock {
+    width: 100%;
+}
+
+.betsList .btn {
+    float: right;
 }

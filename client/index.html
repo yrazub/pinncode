@@ -4,88 +4,17 @@
     <title>PinnCode</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="css/main.css" type="text/css" />
     <script  type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 
   </head>
-  <body>
-    <h1><span class="firstWord">Pinn</span>Code</h1>
-    
-    <% if (typeof lastError != "undefined" && lastError) { %>
-        <div class="error settingsBlock">
-            <h2 class="settingsTitle">Error</h2>
-            <%= lastError %>
-                
-        </div>
-    <% } %>
-    
-    <form method="get" action="/save">
-        <input type="text" name="email" value="<%= email %>">
-        <input type="button" name="save" value="save" onclick="this.form.submit();">
-    </form>
-    
-    <div class="fetchStateBlock settingsBlock">
-        <h2 class="settingsTitle">Status</h2>
-        <% if (isStarted) {%>
-            <span class="statusStarted">started</span>
-        <%} else {%>
-            <span class="statusStopped">stopped</span>
-        <% } %>
-        <br>
-        <button name="start" value="start" id="btnStart">start</button>
-        <button name="stop" value="stop" id="btnStop">stop</button>
-        <button name="check" value="check" id="btnCheck">check</button>
+  <body class="clearfix">
+    <div class="tracker">
+        <%- include view/tracker.html %>
     </div>
-    
-    
-    <div class="settingsBlock">
-        <h2 class="settingsTitle">Interval (seconds)</h2>
-        <span class="smallLabel">min 30</span>
-        <input type="range" id="inputInterval" name="interval" min="30" max="900" step="30" value="<%= interval %>">
-        <span class="smallLabel">max 900</span>
-        <span class="intervalLabel"> <%= interval %> </span>
+    <div class="bets">
+        <%- include view/bets.html %>
     </div>
-    
-    <div class="tournamentsContainer settingsBlock">
-        <h2 class="settingsTitle">Tournaments</h2>
-        <ul>
-            <% for (var tournament in tournaments) { %>
-                <% if (tournaments.hasOwnProperty(tournament)) { %>
-                    <li style="padding:3px">
-                        <a href= "<%= baseUrl %><%= tournaments[tournament].url %>"><%= tournament %></a>
-                        <% if (tournaments[tournament].status == 1) { %>
-                            <span style="color: white;border-radius: 2px;background:green;padding:1px 2px;">new</span>
-                        <% } %>
-                        <% if (tournaments[tournament].hndcp) { %>
-                            <span style="color: white;border-radius: 2px;background:red;padding:1px 2px;">handicap</span>
-                        <% } %>
-                    </li>
-                <% } %>
-            <% } %>
-        </ul>
-    </div>
-    
-    <script>
-        function reloadPage(){
-            document.location.reload();
-        }
-    
-        $("#btnStart").click(function(){
-            $.get("/start", reloadPage);
-        });
-
-        $("#btnStop").click(function(){
-            $.get("/stop", reloadPage);
-        });
-        
-        $("#btnCheck").click(function(){
-            $.get("/check", reloadPage);
-        });
-        
-        $("#inputInterval").change(function(){
-            $.get("/save?interval=" + this.value, reloadPage);
-        });
-    </script>
-    
   </body>
 </html>

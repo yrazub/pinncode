@@ -28,6 +28,10 @@ input[type="range"] {
     display: table;
     padding: 20px;
     margin: 20px 0;
+    width: 100%;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
 }
 
 .settingsBlock .settingsTitle {
@@ -64,11 +68,8 @@ body > .tracker {
 }
 
 body > .bets {
-    margin-left: 400px;
-}
-
-.bets .settingsBlock {
-    width: 100%;
+    margin-left: 415px;
+    max-width: 400px;
 }
 
 .betsList .btn {

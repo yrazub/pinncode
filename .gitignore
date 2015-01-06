@@ -7,4 +7,5 @@ data/*
 # Persistant data
 node_modules/node-persist/persist/persist/*
 
-# Test commit 2
+# ide
+.c9

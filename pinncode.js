@@ -22,7 +22,7 @@ var request = require("request").defaults({jar: true}),
         ignoreRemovedTournaments: true,
         defaultEmail: "ivankraynyk@hotmail.com"
     },
-    config = require('./config'),
+    config = require('./modules/config'),
     intervalId;
     
     

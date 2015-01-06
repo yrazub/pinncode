@@ -80,6 +80,8 @@ app.use(express.static(path.resolve(__dirname, 'logs')));
 app.engine('.html', ejs.__express);
 app.set('views', __dirname);
 
+require('./modules/config').applyRoutes(app);
+
 /*==========================SERVER==========================*/
 
 var server_port = process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3000;
@@ -150,10 +152,10 @@ function sendEmail(email){
     }
 }
 
-console.log("testing api...");
 
-var api = require("./pinnapi");
-api.test();
+console.log("testing api...");
+var api = require("./modules/pinnapi");
+//api.test();
 
 //var browser = require("zombie");
 //var request = require('request').defaults({jar: true});

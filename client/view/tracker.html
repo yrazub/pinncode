@@ -1,5 +1,3 @@
-<h1><span class="firstWord">Pinn</span>Code</h1>
-
 <% if (typeof lastError != "undefined" && lastError) { %>
     <div class="error settingsBlock">
         <h2 class="settingsTitle">Error</h2>
@@ -9,7 +7,9 @@
 <% } %>
 
 <form method="get" action="/save" class="form-inline">
-    <input type="text" name="email" value="<%= email %>">
+    <div class="form-group">
+        <input class="form-control" type="text" name="email" value="<%= email %>">
+    </div>
     <input class="btn btn-default" type="button" name="save" value="save" onclick="this.form.submit();">
 </form>
 

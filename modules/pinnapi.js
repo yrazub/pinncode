@@ -1,5 +1,5 @@
 var request = require("request").defaults({jar: true}),
-    config = require("./modules/config"),
+    config = require("./config"),
     consts = {
         tennisId: 33
     };

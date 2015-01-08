@@ -1,20 +1,32 @@
 <!doctype html>
 <html lang="en" ng-app>
-  <head>
-    <title>PinnCode</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+        <title>PinnCode</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="css/main.css" type="text/css" />
-    <script  type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" />
+        <link rel="stylesheet" href="css/main.css" type="text/css" />
+        <script  type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script  type="text/javascript" src="js/bootstrap.min.js"></script>
 
-  </head>
-  <body class="clearfix">
-    <div class="tracker">
-        <%- include view/tracker.html %>
-    </div>
-    <div class="bets">
-        <%- include view/bets.html %>
-    </div>
-  </body>
+    </head>
+    <body class="clearfix">
+        <nav class="navbar bg-success navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <h1><span class="firstWord">Pinn</span>Code</h1>
+                </div>
+            </div>
+        </nav>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6">
+                    <%- include view/tracker.html %>
+                </div>
+                <div class="col-md-6">
+                    <%- include view/bets.html %>
+                </div>
+            </div>
+        </div>
+    </body>
 </html>

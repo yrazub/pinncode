@@ -1,0 +1,52 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h3 class="modal-title" id="myModalLabel"><span class="firstWord">Pinn</span>Code Configs</h3>
+  </div>
+<div class="modal-body">
+
+    <div class="row">
+        <div class="col-xs-5">
+            <h3>Status: 
+            <% if (isStarted) {%>
+                <span id="configStatus" class="label label-success">Started</span>
+            <%} else {%>
+                <span id="configStatus" class="label label-danger">Stopped</span>
+            <% } %>
+            </h3>
+        </div>
+        <div class="btn-group col-xs-7" role="group" aria-label="...">
+            <button class="btn btn-success btn-sm" name="start" value="start" id="btnStart">Start</button>
+            <button class="btn btn-danger btn-sm" name="stop" value="stop" id="btnStop">Stop</button>
+            <button class="btn btn-info btn-sm" name="check" value="check" id="btnCheck">Check</button>
+        </div>
+    </div>
+
+    <hr>
+
+    <form method="get" action="/save" class="form-inline">
+        <div class="form-group">
+            <label class="control-label" for="InputEmail">Email address</label>
+            <input type="email"
+                class="form-control"
+                id="InputEmail"
+                placeholder="Enter email"
+                name="email"
+                value="<%= email %>">
+        </div>
+        <input class="btn btn-primary" type="button" name="save" value="save" onclick="this.form.submit();">
+    </form>
+
+    <hr>
+
+    <div>
+        <h3>Interval (seconds)</h3>
+        <span class="smallLabel">min 30</span>
+        <input type="range" id="inputInterval" name="interval" min="30" max="900" step="30" value="<%= interval %>">
+        <span class="smallLabel">max 900</span>
+        <span class="intervalLabel"> <%= interval %> </span>
+    </div>
+
+
+</div>

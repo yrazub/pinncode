@@ -6,35 +6,6 @@
     </div>
 <% } %>
 
-<form method="get" action="/save" class="form-inline">
-    <div class="form-group">
-        <input class="form-control" type="text" name="email" value="<%= email %>">
-    </div>
-    <input class="btn btn-default" type="button" name="save" value="save" onclick="this.form.submit();">
-</form>
-
-<div class="fetchStateBlock settingsBlock">
-    <h2 class="settingsTitle">Status</h2>
-    <% if (isStarted) {%>
-        <span class="statusStarted">started</span>
-    <%} else {%>
-        <span class="statusStopped">stopped</span>
-    <% } %>
-    <br>
-    <button class="btn btn-default" name="start" value="start" id="btnStart">start</button>
-    <button class="btn btn-default" name="stop" value="stop" id="btnStop">stop</button>
-    <button class="btn btn-default" name="check" value="check" id="btnCheck">check</button>
-</div>
-
-
-<div class="settingsBlock">
-    <h2 class="settingsTitle">Interval (seconds)</h2>
-    <span class="smallLabel">min 30</span>
-    <input type="range" id="inputInterval" name="interval" min="30" max="900" step="30" value="<%= interval %>">
-    <span class="smallLabel">max 900</span>
-    <span class="intervalLabel"> <%= interval %> </span>
-</div>
-
 <div class="tournamentsContainer settingsBlock">
     <h2 class="settingsTitle">Tournaments</h2>
     <ul>
@@ -53,25 +24,3 @@
         <% } %>
     </ul>
 </div>
-
-<script>
-    function reloadPage(){
-        document.location.reload();
-    }
-
-    $("#btnStart").click(function(){
-        $.get("/start", reloadPage);
-    });
-
-    $("#btnStop").click(function(){
-        $.get("/stop", reloadPage);
-    });
-    
-    $("#btnCheck").click(function(){
-        $.get("/check", reloadPage);
-    });
-    
-    $("#inputInterval").change(function(){
-        $.get("/save?interval=" + this.value, reloadPage);
-    });
-</script>

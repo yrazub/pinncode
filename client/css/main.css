@@ -1,11 +1,14 @@
 body {
     padding-top: 90px;
 }
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+}
+h1.navbar-brand {
+    font-size: 300%;
+}
 .firstWord {
     color: orange;
-}
-h2 {
-    display: inline-block;
 }
 .fetchStateBlock * {
     font-size: 16px;
@@ -43,6 +46,7 @@ input[type="range"] {
     line-height: 20px;
     background: #fff;
     font-weight: normal;
+    display: inline-block;
 }
 .intervalLabel {
     display: block;

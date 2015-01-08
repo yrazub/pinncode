@@ -10,12 +10,13 @@
         <script  type="text/javascript" src="js/bootstrap.min.js"></script>
 
     </head>
-    <body class="clearfix">
+    <body>
         <nav class="navbar bg-success navbar-fixed-top">
             <div class="container">
-                <div class="navbar-header">
-                    <h1><span class="firstWord">Pinn</span>Code</h1>
-                </div>
+                <h1 class="navbar-brand"><span class="firstWord">Pinn</span>Code</h1>
+                <button class="btn btn-default navbar-btn pull-right" data-toggle="modal" data-target="#configModal">
+                    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                </button>
             </div>
         </nav>
         <div class="container-fluid">
@@ -27,6 +28,13 @@
                     <%- include view/bets.html %>
                 </div>
             </div>
+        </div>
+        <div  class="modal fade" id="configModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <%- include view/config.html %>
+                </div>
+              </div>
         </div>
     </body>
 </html>

@@ -2,13 +2,14 @@ var http = require('http');
 var path = require('path');
 var express = require('express');
 var url = require('url');
-var nodemailer = require("nodemailer");
+var nodemailer = require('nodemailer');
 var storage = require('node-persist');
+var config = require('./modules/config');
 var transport = nodemailer.createTransport("SMTP", {
     service: "Gmail",
     auth: {
-        user: "pinncode1@gmail.com",
-        pass: "R@faelNadal"
+        user: config.get('email.from'),
+        pass: config.get('email.from.password')
     }
 });
 var pinncode = require("./pinncode");
@@ -73,6 +74,23 @@ app.get('/check', function(req, res){
     res.send(200);
 });
 
+app.get('/models/:name', function(req, res){
+    var name = req.params.name,
+        models = {
+            'pinncode': function(){
+                return pinncode.getModel();
+            }
+        };
+    
+    if (name in models) {
+        res.send(models[name]());
+        res.send(200);
+    } else {
+        res.send(404);
+    }
+        
+});
+
 app.use(express.static(path.resolve(__dirname, 'client')));
 app.use(express.static(path.resolve(__dirname, 'data')));
 app.use(express.static(path.resolve(__dirname, 'logs')));
@@ -80,7 +98,7 @@ app.use(express.static(path.resolve(__dirname, 'logs')));
 app.engine('.html', ejs.__express);
 app.set('views', __dirname);
 
-require('./modules/config').applyRoutes(app);
+config.applyRoutes(app);
 
 /*==========================SERVER==========================*/
 

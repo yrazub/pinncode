@@ -56,7 +56,7 @@ storage.initSync({
 });
 
 var tournaments = storage.getItem("tournaments");
-console.log("Tournaments from storage:" + JSON.stringify(tournaments));
+//console.log("Tournaments from storage:" + JSON.stringify(tournaments));
 
 var email = config.get("email");
 console.log("Email from storage:" + email);
@@ -104,7 +104,7 @@ function compareObj(a, b, ignoreMissingKeys) {
             }
             
             if (!b[key]) {
-                console.log("======== key missing: " + key);
+                //console.log("======== key missing: " + key);
                 
                 difference[key] = {status: 0};
             }
@@ -117,19 +117,19 @@ function compareObj(a, b, ignoreMissingKeys) {
         }
         
         if (!a || !a[key]) {
-            console.log("======== key added: " + key);
+            //console.log("======== key added: " + key);
             
             difference[key] = {status: 1};
         }
         
         if (b[key].hndcp && a && a[key] && !a[key].hndcp) {
-            console.log("======== hndcp added: " + key);
+            //console.log("======== hndcp added: " + key);
             
             difference[key] = {hndcp: true};
         }
     }
     
-    console.log("difference:", difference);
+    //console.log("difference:", difference);
     
     
     return difference;
@@ -188,7 +188,7 @@ function fetchTournaments(){
     }
     
     function processTournaments(newTournaments){
-        console.log("new tournaments:" +  JSON.stringify(newTournaments));
+        //console.log("new tournaments:" +  JSON.stringify(newTournaments));
         
         var diff = compareObj(tournaments, newTournaments, consts.ignoreRemovedTournaments);
         
@@ -203,7 +203,7 @@ function fetchTournaments(){
         tournaments = newTournaments;
         
         if (Object.keys(diff).length > 0) {
-            console.log("newTournaments differs, notifying listeners");
+            //console.log("newTournaments differs, notifying listeners");
             for (var key in diff) {
                 if (diff.hasOwnProperty(key) && diff[key]) {
                     if (diff[key].status) {
@@ -248,7 +248,7 @@ function fetchTournaments(){
             
             Promise.all(promises).then(function(result){
                 try {
-                    console.log("all done ", result);
+                    //console.log("all done ", result);
                     processTournaments(newTournaments);
                 } catch (e) {
                     console.log(e);

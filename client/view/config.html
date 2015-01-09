@@ -9,11 +9,7 @@
     <div class="row">
         <div class="col-xs-5">
             <label>Status: 
-            <% if (isStarted) {%>
-                <span id="configStatus" class="label label-success">Started</span>
-            <%} else {%>
-                <span id="configStatus" class="label label-danger">Stopped</span>
-            <% } %>
+                <span id="configStatus" class="label"></span>
             </label>
         </div>
         <div class="btn-group col-xs-7" role="group">
@@ -35,7 +31,7 @@
                 name="email"
                 value="<%= email %>">
         </div>
-        <input class="btn btn-primary" type="button" name="save" value="save" onclick="this.form.submit();">
+        <input class="btn btn-primary" type="button" name="save" value="save" id="InputEmailSubmit">
     </form>
 
     <hr>
@@ -46,7 +42,7 @@
         <span class="smallLabel">min 30</span>
         <input type="range" id="inputInterval" name="interval" min="30" max="900" step="30" value="<%= interval %>">
         <span class="smallLabel">max 900</span>
-        <span class="intervalLabel"> <%= interval %> </span>
+        <span class="intervalLabel" id="intervalLabel"></span>
     </div>
 
 

@@ -1,68 +1,80 @@
 $(function () {
     var messager = {
-        send: function (message, callback) {
-            $.get("/" + message, callback);
-        }
-    };
-    ({
-        status: {
-            init: function () {
-                var self = this;
-                $("#btnStart").click(function(){
-                    messager.send("start", $.proxy(self.update, self));
-                });
-                $("#btnStop").click(function(){
-                    messager.send("stop", $.proxy(self.update, self));
-                });
-                $("#btnCheck").click(function(){
-                    messager.send("check", $.proxy(self.update, self));
-                });
-            },
-            update: function () {
-                reloadPage();
+            send: function (message, callback) {
+                $.get("/" + message, callback);
             }
         },
-        emailInit: function () {
+        mainWindow = {
+            status: {
+                cont: $('#configStatus'),
+                init: function () {
+                    $("#btnStart").click(function(){
+                        messager.send("start", $.proxy(mainWindow.update, mainWindow));
+                    });
+                    $("#btnStop").click(function(){
+                        messager.send("stop", $.proxy(mainWindow.update, mainWindow));
+                    });
+                    $("#btnCheck").click(function(){
+                        messager.send("check", $.proxy(mainWindow.update, mainWindow));
+                    });
+                },
+                update: function (isStarted) {
+                    if (isStarted) {
+                        this.cont.removeClass('label-danger');
+                        this.cont.addClass('label-success');
+                        this.cont.html('Started');
+                    } else {
+                        this.cont.removeClass('label-success');
+                        this.cont.addClass('label-danger');
+                        this.cont.html('Stopped');
+                    }
+                }
+            },
+            email: {
+                cont: $('#InputEmail'),
+                init: function () {
+                    $('#InputEmail').parents('form').on('submit', $.proxy(function () {
+                        messager.send('config/set/email/' + this.cont.val());
+                        return false;
+                    }, this));
+                }
+            },
+            interval: {
+                cont: $("#inputInterval"),
+                label: $('#intervalLabel'),
+                init: function () {
+                    this.cont.change(function(){
+                        messager.send("config/set/interval/" + this.value, $.proxy(mainWindow.update, mainWindow));
+                    });
+                },
+                update: function (val) {
+                    this.cont.val(val);
+                    this.label.html(val);
+                }
+            },
+            tournament: {
+                cont: $('#tournamentTemplate'),
+                update: function (data) {
+                    var template = new EJS({element: this.cont.get(0)}).render(data);
+                    this.cont.siblings('ul').html(template);
+                }
+            },
+            init: function () {
+                this.status.init();
+                this.email.init();
+                this.interval.init();
+                this.update();
+            },
+            update: function () {
+                messager.send('models/pinncode', $.proxy(function (data) {
+                    this.status.update(data.isStarted);
+                    this.interval.update(data.interval);
+                    this.email.cont.val(data.email);
+                    this.tournament.update(data);
+                }, this));
+            }
+        };
 
-        },
-        intervalInit: function () {
-            $("#inputInterval").change(function(){
-                messager.send("save?interval=" + this.value, reloadPage);
-            });
-        },
-        init: function () {
-            this.status.init();
-            this.intervalInit();
-        }
-    }).init();
-
-
-    function reloadPage(){
-        document.location.reload();
-    }
+    mainWindow.init();
 
 });
-
-
-
-/*
-function reloadPage(){
-    document.location.reload();
-}
-
-$("#btnStart").click(function(){
-    $.get("/start", reloadPage);
-});
-
-$("#btnStop").click(function(){
-    $.get("/stop", reloadPage);
-});
-
-$("#btnCheck").click(function(){
-    $.get("/check", reloadPage);
-});
-
-$("#inputInterval").change(function(){
-    $.get("/save?interval=" + this.value, reloadPage);
-});
-*/

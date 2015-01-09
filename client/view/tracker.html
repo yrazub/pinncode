@@ -8,19 +8,21 @@
 
 <div class="tournamentsContainer settingsBlock">
     <h2 class="settingsTitle">Tournaments</h2>
-    <ul>
-        <% for (var tournament in tournaments) { %>
-            <% if (tournaments.hasOwnProperty(tournament)) { %>
-                <li style="padding:3px">
-                    <a href= "<%= baseUrl %><%= tournaments[tournament].url %>"><%= tournament %></a>
-                    <% if (tournaments[tournament].status == 1) { %>
-                        <span style="color: white;border-radius: 2px;background:green;padding:1px 2px;">new</span>
-                    <% } %>
-                    <% if (tournaments[tournament].hndcp) { %>
-                        <span style="color: white;border-radius: 2px;background:red;padding:1px 2px;">handicap</span>
-                    <% } %>
-                </li>
-            <% } %>
+    <template id="tournamentTemplate">
+    <% for (var tournament in tournaments) { %>
+        <% if (tournaments.hasOwnProperty(tournament)) { %>
+            <li style="padding:3px">
+                <a href= "<%= baseUrl %><%= tournaments[tournament].url %>"><%= tournament %></a>
+                <% if (tournaments[tournament].status == 1) { %>
+                    <span style="color: white;border-radius: 2px;background:green;padding:1px 2px;">new</span>
+                <% } %>
+                <% if (tournaments[tournament].hndcp) { %>
+                    <span style="color: white;border-radius: 2px;background:red;padding:1px 2px;">handicap</span>
+                <% } %>
+            </li>
         <% } %>
+    <% } %>
+    </template>
+    <ul>
     </ul>
 </div>

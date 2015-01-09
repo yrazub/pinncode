@@ -8,18 +8,18 @@
 
     <div class="row">
         <div class="col-xs-5">
-            <h3>Status: 
+            <label>Status: 
             <% if (isStarted) {%>
                 <span id="configStatus" class="label label-success">Started</span>
             <%} else {%>
                 <span id="configStatus" class="label label-danger">Stopped</span>
             <% } %>
-            </h3>
+            </label>
         </div>
-        <div class="btn-group col-xs-7" role="group" aria-label="...">
-            <button class="btn btn-success btn-sm" name="start" value="start" id="btnStart">Start</button>
-            <button class="btn btn-danger btn-sm" name="stop" value="stop" id="btnStop">Stop</button>
-            <button class="btn btn-info btn-sm" name="check" value="check" id="btnCheck">Check</button>
+        <div class="btn-group col-xs-7" role="group">
+            <button class="btn btn-success btn-xs" name="start" value="start" id="btnStart">Start</button>
+            <button class="btn btn-danger btn-xs" name="stop" value="stop" id="btnStop">Stop</button>
+            <button class="btn btn-info btn-xs" name="check" value="check" id="btnCheck">Check</button>
         </div>
     </div>
 
@@ -41,7 +41,8 @@
     <hr>
 
     <div>
-        <h3>Interval (seconds)</h3>
+        <label>Interval (seconds)</label>
+        <br>
         <span class="smallLabel">min 30</span>
         <input type="range" id="inputInterval" name="interval" min="30" max="900" step="30" value="<%= interval %>">
         <span class="smallLabel">max 900</span>

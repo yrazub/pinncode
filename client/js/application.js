@@ -34,7 +34,7 @@ $(function () {
                 cont: $('#InputEmail'),
                 init: function () {
                     $('#InputEmail').parents('form').on('submit', $.proxy(function () {
-                        messager.send('config/set/email/' + this.cont.val());
+                        messager.send('config/set/email/' + this.cont.val(), $.proxy(mainWindow.update, mainWindow));
                         return false;
                     }, this));
                 }

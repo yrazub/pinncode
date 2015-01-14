@@ -1,24 +1,28 @@
-var http = require('http');
-var path = require('path');
-var express = require('express');
-var url = require('url');
-var nodemailer = require('nodemailer');
-var storage = require('node-persist');
-var config = require('./modules/config');
-var transport = nodemailer.createTransport("SMTP", {
-    service: "Gmail",
-    auth: {
-        user: config.get('email.from'),
-        pass: config.get('email.from.password')
-    }
-});
-var pinncode = require("./pinncode");
-var ejs = require('ejs'),
+var http = require('http'),
+    path = require('path'),
+    express = require('express'),
+    bodyParser = require('body-parser'),
+    url = require('url'),
+    nodemailer = require('nodemailer'),
+    storage = require('node-persist'),
+    config = require('./modules/config'),
+    pinnbets = require('./modules/pinnbets'),
+    pinncode = require("./pinncode"),
+    transport = nodemailer.createTransport("SMTP", {
+        service: "Gmail",
+        auth: {
+            user: config.get('email.from'),
+            pass: config.get('email.from.password')
+        }
+    }),
+    ejs = require('ejs'),
     fs = require('fs'),
     emailTemplate = fs.readFileSync(__dirname + '/email.ejs', 'utf8');
 
 var app = express();
 app.use(express.basicAuth("pinncode", "p1NNcode1"));
+//app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true, type: 'text/plain'})); // for parsing application/x-www-form-urlencoded
 
 /*==========================ROUTES==========================*/
 
@@ -84,7 +88,6 @@ app.get('/models/:name', function(req, res){
     
     if (name in models) {
         res.send(models[name]());
-        res.send(200);
     } else {
         res.send(404);
     }
@@ -99,6 +102,7 @@ app.engine('.html', ejs.__express);
 app.set('views', __dirname);
 
 config.applyRoutes(app);
+pinnbets.applyRoutes(app);
 
 /*==========================SERVER==========================*/
 

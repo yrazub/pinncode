@@ -11,6 +11,7 @@
     "request": "~2.34.0",
     "node-persist": "0.0.2",
     "ejs": "~1.0.0",
-    "promise": "~4.0.0"
+    "promise": "~4.0.0",
+    "body-parser": "^1.10.1"
   }
 }

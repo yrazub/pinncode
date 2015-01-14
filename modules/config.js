@@ -23,11 +23,11 @@ module.exports = {
         return storage.getItem(name) || defaults[name];
     },
     
-    set: function(name, value){
+    set: function(name, value) {
         storage.setItem(name, value);
     },
     
-    applyRoutes: function(app){
+    applyRoutes: function(app) {
         var self = this;
         
         app.get('/config/get/:name', function(req, res) {

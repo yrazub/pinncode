@@ -22,7 +22,7 @@ var http = require('http'),
 var app = express();
 app.use(express.basicAuth("pinncode", "p1NNcode1"));
 //app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true, type: 'text/plain'})); // for parsing application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true})); // for parsing application/x-www-form-urlencoded
 
 /*==========================ROUTES==========================*/
 

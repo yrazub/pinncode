@@ -1,4 +1,4 @@
-<form class="settingsBlock form-horizontal" method="post" action="bets/add">
+<form class="settingsBlock form-horizontal" method="post" id="betsForm">
     <h2 class="settingsTitle">Do Bets</h2>
 
     <div class="form-group">
@@ -16,29 +16,59 @@
     <div class="form-group">
         <label for="inputK" class="col-sm-3 control-label">K</label>
         <div class="col-sm-9">
-            <input type="text" class="form-control" id="inputK" placeholder="K" name="inputK">
+            <input type="text" class="form-control" id="inputK" placeholder="K" name="k">
         </div>
     </div>
     <div class="form-group">
-        <label for="inputPay" class="col-sm-3 control-label">Pay</label>
+        <label for="inputPay" class="col-sm-3 control-label">Price</label>
         <div class="col-sm-9">
-            <input type="number" class="form-control" id="inputPay" placeholder="Pay" name="inputPay">
+            <input type="number" class="form-control" id="inputPrice" placeholder="Price" name="price">
         </div>
     </div>
     <div class="form-group">
         <div class="col-sm-offset-3 col-sm-9">
-            <button type="submit" class="btn btn-primary btn-lg">Bet</button>
-            <input type="submit">
+            <input type="submit" class="btn btn-primary btn-lg" value="Bet">
         </div>
     </div>
 </form>
 
-<div class="settingsBlock betsList">
+<div class="settingsBlock betsList" id="betsList">
     <h2 class="settingsTitle">Bets</h2>
-    <ul>
-        <li>
-            <span class="data">S - S 29</span>
-            <span class="btn btn-danger btn-xs">Remove</span>
-        </li>
-    </ul>
+    <template>
+        [% for (var id in bets) { %]
+            [% if (bets.hasOwnProperty(id)) { %]
+                <tr data-id="[%=id%]">
+                    <td>
+                        [%=bets[id].name1%] - [%=bets[id].name2%]
+                    </td>
+                    <td class="text-right">
+                        [%=bets[id].k%]
+                    </td>
+                    <td class="text-right">
+                        [%=bets[id].price%] $
+                    </td>
+                    <td class="text-center">
+                        <button class="btn btn-danger btn-xs remove">Remove</button>
+                    </td>
+                </tr>
+            [% } %]
+        [% } %]
+    </template>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>
+                    Player 1 - Player 2
+                </th>
+                <th class="text-right">
+                    K
+                </th>
+                <th class="text-right">
+                    Price
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody class="list"></tbody>
+    </table>
 </div>

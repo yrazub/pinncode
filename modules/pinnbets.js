@@ -16,21 +16,30 @@ var
             
             config.set('bets', bets);
         },
+
+        remove: function (id) {
+            delete bets[id];
+            config.set('bets', bets);
+        },
         
         applyRoutes: function(app){
             var self = this;
             
             app.get('/bets/get', function(req, res) {
-                res.send(self.getAll());        
-            });        
-            
+                res.send(self.getAll());
+            });
+
             app.post('/bets/add', function(req, res) {
                 console.log(req.body);
                 
                 self.addNew(req.body);
                 res.send("ok");
             });
-            
+
+            app.get('/bets/remove/:id', function(req, res) {
+                self.remove(req.params.id);
+                res.send("ok");
+            });
         }
     };
 

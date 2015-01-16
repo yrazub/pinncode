@@ -116,9 +116,7 @@ $(function () {
                     });
                 },
                 remove: function (id) {
-                    messager.send('bets/remove/' + id, $.proxy(function (data) {
-                        this.update(data);
-                    }, this));
+                    messager.send('bets/remove/' + id, $.proxy(betsWindow.update, betsWindow));
                 },
                 update: function (data) {
                     var template = new EJS({element: this.cont.find('template').get(0)}).render({bets: data});

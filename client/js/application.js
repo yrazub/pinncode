@@ -89,22 +89,49 @@ $(function () {
         betsWindow = {
             addBet: {
                 cont: $('#betsForm'),
+                msg: 'The value cannot be empty',
+                errorShowDuration: 10000,
                 init: function () {
+                    var self = this;
                     this.cont.on('submit', $.proxy(function () {
-                        var data = {};
+                        var data = {},
+                            hasError = false;
                         $.each(this.cont.serializeArray(), function (i, field) {
                             data[field.name] = field.value;
+                            if ($.trim(field.value) === '') {
+                                hasError = true;
+                                self.showError(field.name, self.msg);
+                            }
                         });
-                        messager.sendForm(
-                            'bets/add',
-                            data,
-                            $.proxy(betsWindow.update, betsWindow)
-                        );
+                        if (!hasError) {
+                            messager.sendForm(
+                                'bets/add',
+                                data,
+                                $.proxy(betsWindow.update, betsWindow)
+                            );
+                        }
                         return false;
                     }, this));
                 },
                 reset: function () {
                     this.cont.get(0).reset();
+                },
+                showError: function (name, msg) {
+                    var eCont = this.cont.find('#formError_' + name),
+                        fieldCont = eCont.parents('.form-group');
+                        li = $(document.createElement('li')),
+                        self = this;
+                    li.html(msg);
+                    eCont.append(li);
+                    fieldCont.addClass('has-error');
+                    (function (cont, fieldCont) {
+                        setTimeout(function () {
+                            cont.fadeOut(500, function () {
+                                cont.remove();
+                            });
+                            fieldCont.removeClass('has-error');
+                        }, self.errorShowDuration);
+                    })(li, fieldCont);
                 }
             },
             betsList: {

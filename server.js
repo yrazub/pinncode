@@ -7,7 +7,11 @@ var http = require('http'),
     storage = require('node-persist'),
     config = require('./modules/config'),
     pinnbets = require('./modules/pinnbets'),
+    logger = require('./modules/logger'),
     pinncode = require("./pinncode"),
+    ejs = require('ejs'),
+    fs = require('fs'),
+    
     transport = nodemailer.createTransport("SMTP", {
         service: "Gmail",
         auth: {
@@ -15,8 +19,6 @@ var http = require('http'),
             pass: config.get('email.from.password')
         }
     }),
-    ejs = require('ejs'),
-    fs = require('fs'),
     emailTemplate = fs.readFileSync(__dirname + '/email.ejs', 'utf8');
 
 var app = express();
@@ -103,6 +105,7 @@ app.set('views', __dirname);
 
 config.applyRoutes(app);
 pinnbets.applyRoutes(app);
+logger.applyRoutes(app);
 
 /*==========================SERVER==========================*/
 
@@ -175,8 +178,9 @@ function sendEmail(email){
 }
 
 
-console.log("testing api...");
-var api = require("./modules/pinnapi");
+//console.log("testing api...");
+//var api = require("./modules/pinnapi");
+//api.getLeagues();
 //api.test();
 
 //var browser = require("zombie");

@@ -24,26 +24,7 @@ var request = require("request").defaults({jar: true}),
     },
     config = require('./modules/config'),
     intervalId;
-    
-    
-/*=========Patching console.log=========*/
 
-var util = require('util');
-var log_file = fs.createWriteStream(mainDir + '/logs/console.log', {flags : 'a'});
-//var log_stdout = process.stdout;
-
-console.log = function(_original){
-    log_file.write("\n\n");
-    return function(d) { //
-        try {
-            log_file.write(util.format.apply(null, arguments) + '\n');
-        } catch(e){}
-      
-        _original.apply(console, arguments);
-    };
-}(console.log);
-
-/* ===================================== */
 
 storage.initSync({
     dir:mainDir + "/data" ,
@@ -170,7 +151,7 @@ function fetchTournaments(){
             timeout = timeout || 100;
             
             setTimeout(function(){
-                console.log("Sending request to " + t.url);
+                console.log("Sending request to " + url);
                 
                 request.get(url, function(error, response, body){
                     if (error || response.statusCode != 200) {

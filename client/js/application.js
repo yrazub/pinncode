@@ -90,6 +90,7 @@ $(function () {
             addBet: {
                 cont: $('#betsForm'),
                 msg: 'The value cannot be empty',
+                errors: {},
                 errorShowDuration: 10000,
                 init: function () {
                     var self = this;
@@ -101,6 +102,8 @@ $(function () {
                             if ($.trim(field.value) === '') {
                                 hasError = true;
                                 self.showError(field.name, self.msg);
+                            } else {
+                                self.hideError(self.cont.find('#formError_' + field.name));
                             }
                         });
                         if (!hasError) {
@@ -117,21 +120,32 @@ $(function () {
                     this.cont.get(0).reset();
                 },
                 showError: function (name, msg) {
-                    var eCont = this.cont.find('#formError_' + name),
-                        fieldCont = eCont.parents('.form-group');
-                        li = $(document.createElement('li')),
+                    var id = '#formError_' + name,
+                        eCont = this.cont.find(id),
                         self = this;
-                    li.html(msg);
-                    eCont.append(li);
-                    fieldCont.addClass('has-error');
-                    (function (cont, fieldCont) {
-                        setTimeout(function () {
+                    this.hideError(eCont);
+                    eCont.html(msg);
+                    eCont.parents('.form-group').addClass('has-error');
+                    (function (cont) {
+                        self.errors[cont.attr('id')] = setTimeout(function () {
                             cont.fadeOut(500, function () {
-                                cont.remove();
+                                self.hideError(cont);
                             });
-                            fieldCont.removeClass('has-error');
                         }, self.errorShowDuration);
-                    })(li, fieldCont);
+                    })(eCont);
+                },
+                hideError: function (cont) {
+                    var self = this;
+                    cont.each(function (index, element) {
+                        var id = $(element).attr('id');
+                        if (self.errors[id]) {
+                            clearTimeout(self.errors[id]);
+                            delete self.errors[id];
+                        }
+                    });
+                    cont.html('');
+                    cont.fadeIn(0);
+                    cont.parents('.form-group').removeClass('has-error');
                 }
             },
             betsList: {

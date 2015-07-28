@@ -16,7 +16,11 @@ module.exports = {
                 clear();
                 res.send("ok");  
             });
-    } 
+    },
+    
+    enable: enable,
+    
+    disable: disable
 };
 
 var fs = require('fs'),

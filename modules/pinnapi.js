@@ -12,7 +12,7 @@ var api = {
 
 function test() {
     var options = {
-        url: 'https://api.pinnaclesports.com/v1/feed?sportid=' + consts.tennisId + '&oddsFormat=1&last=1423145244028',
+        url: 'https://api.pinnaclesports.com/v1/feed?sportid=' + consts.tennisId + '&oddsFormat=1&last=1373383152874',
         headers: {
             'Authorization': 'Basic ' + config.get("authorization")
         }

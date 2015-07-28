@@ -177,11 +177,11 @@ function sendEmail(email){
     }
 }
 
-
-//console.log("testing api...");
-//var api = require("./modules/pinnapi");
+console.log("testing api...");
+logger.enable();
+var api = require("./modules/pinnapi");
 //api.getLeagues();
-//api.test();
+api.test();
 
 //var browser = require("zombie");
 //var request = require('request').defaults({jar: true});
